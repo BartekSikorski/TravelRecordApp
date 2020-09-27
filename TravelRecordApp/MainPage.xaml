@@ -7,10 +7,12 @@
                  Margin="20">
         <Entry x:Name="emailEntry" Placeholder="Email address"
                Keyboard="Email"
+               Text="Text"
                TextColor="{StaticResource blue}"
                />
         <Entry x:Name="passwordEntry" Placeholder="Password"
                IsPassword="True"
+               Text="Password"
                TextColor="{StaticResource blue}"/>
         <Button x:Name="LoginButton" Text="Log in"
                 Margin="0,50,0,0"
