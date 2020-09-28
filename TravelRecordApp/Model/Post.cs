@@ -12,5 +12,14 @@ namespace TravelRecordApp.Model
 
         [MaxLength(250)]
         public string Experience { get; set; }
+
+        public string VenueName { get; set; }
+        public string CategoryID { get; set; }
+        public string CategoryName { get; set; }
+        public string Address { get; set; }
+        public double Latitude { get; set; }
+        public double Longtitude { get; set; }
+        public int Distances { get; set; } 
+
     }
 }
