@@ -50,7 +50,6 @@ namespace TravelRecordApp
                 DisplayInMap(posts);
             }
         }
-
         private void DisplayInMap(List<Post> posts)
         {
             foreach (var post in posts)
