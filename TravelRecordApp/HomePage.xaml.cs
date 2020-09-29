@@ -19,10 +19,5 @@ namespace TravelRecordApp
             viewModel = new HomeVM();
             BindingContext = viewModel;
         }
-
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
-        {
-            Navigation.PushAsync(new NewTravelPage());
-        }
     }
 }
