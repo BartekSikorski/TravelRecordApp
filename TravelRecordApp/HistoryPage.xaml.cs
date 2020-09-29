@@ -21,13 +21,7 @@ namespace TravelRecordApp
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-            {
-                conn.CreateTable<Post>();
-                List<Post> posts = conn.Table<Post>().ToList();
-                postListView.ItemsSource = posts;
-            }
-
+            postListView.ItemsSource = Post.Read();
         }
 
         private void postListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

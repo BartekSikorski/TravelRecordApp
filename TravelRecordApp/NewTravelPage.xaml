@@ -7,8 +7,10 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <StackLayout>
-            <Entry x:Name="Experience"  Placeholder="Enter yotur experience" />
+        <StackLayout x:Name="containerStackLayout">
+            <Entry x:Name="Experience" 
+                   Text="{Binding Experience, Mode=TwoWay}"
+                   Placeholder="Enter yotur experience" />
             <ListView x:Name="venueListView"
                       Margin="20,0"
                       HorizontalOptions="FillAndExpand">
