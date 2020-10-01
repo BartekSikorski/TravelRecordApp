@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TravelRecordApp.Model;
+using TravelRecordApp.ViewModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,15 +14,19 @@ namespace TravelRecordApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HistoryPage : ContentPage
     {
+        HistoryVM viewModel;
         public HistoryPage()
         {
             InitializeComponent();
+            viewModel = new HistoryVM();
+            BindingContext = viewModel;
         }
 
-        protected override async void OnAppearing()
+
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            postListView.ItemsSource = await Post.Read();
+            viewModel.UpdatePosts();
         }
 
         private void postListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
