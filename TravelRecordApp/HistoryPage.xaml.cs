@@ -18,10 +18,10 @@ namespace TravelRecordApp
             InitializeComponent();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            postListView.ItemsSource = Post.Read();
+            postListView.ItemsSource = await Post.Read();
         }
 
         private void postListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

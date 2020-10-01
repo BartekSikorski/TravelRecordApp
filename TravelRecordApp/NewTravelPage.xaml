@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TravelRecordApp.NewTravelPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Clicked="ToolbarItem_Clicked" />
+        <ToolbarItem Text="Save" 
+                     Command="{Binding SaveCommand}"
+                     CommandParameter="{Binding Post}"
+                      />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -12,6 +15,7 @@
                    Text="{Binding Experience, Mode=TwoWay}"
                    Placeholder="Enter yotur experience" />
             <ListView x:Name="venueListView"
+                      SelectedItem="{Binding Venue,Mode=TwoWay}"
                       Margin="20,0"
                       HorizontalOptions="FillAndExpand">
                 <ListView.ItemTemplate>

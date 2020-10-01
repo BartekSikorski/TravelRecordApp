@@ -1,4 +1,6 @@
-﻿using SQLite;
+﻿using Firebase.Database.Query;
+using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -105,36 +107,102 @@ namespace TravelRecordApp.Model
             }
         }
 
+        public int UserId { get; set; }
+
+        public Guid UserGuid { get; set; }
+
+        private Venue venue;
+
+        public Venue Venue
+        {
+            get { return venue; }
+            set
+            {
+                venue = value;
+                if (venue.categories != null)
+                {
+                    var firstCategory = venue.categories.FirstOrDefault();
+
+                    if (firstCategory != null)
+                    {
+                        CategoryID = firstCategory.id;
+                        CategoryName = firstCategory.name;
+                    }
+                }
+
+                VenueName = venue.name;
+                if (venue.location != null)
+                {
+                    Latitude = venue.location.lat;
+                    Longtitude = venue.location.lng;
+                    Address = venue.location.address;
+                    Distances = venue.location.distance;
+                }
+               
+
+                OnPropertyChanged("Venue");
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static List<Post> Read()
+        public static async Task<List<Post>> Read()
         {
-            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-            {
-                conn.CreateTable<Post>();
-                List<Post> posts = conn.Table<Post>().ToList();
-                return posts;
-            }
+            var ttt = (await App.firebase.Child("Posts").OnceAsync<Post>());
+
+            var posts = (await App.firebase.Child("Posts").OnceAsync<Post>())
+                .Where(x => x.Object.UserGuid.ToString() == App.user.Guid.ToString())
+                .Select(x => new Post
+                {
+                    Experience = x.Object.Experience,
+                    Latitude = x.Object.Latitude,
+                    Longtitude = x.Object.Longtitude,
+                    Venue = x.Object.Venue,
+                    Address = x.Object.Address,
+                    Distances = x.Object.Distances,
+                    VenueName = x.Object.VenueName,
+                    UserGuid = x.Object.UserGuid
+
+                }).ToList();
+
+            return posts;
+            //using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            //{
+            //    //conn.CreateTable<Post>();
+            //    List<Post> posts = conn.Table<Post>().ToList();
+            //    return posts;
+            //}
         }
 
         public int Distances { get; set; }
 
         public static async Task<bool> Insert(Post post)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            var row = await App.firebase.Child("Posts").PostAsync(post);
+            if (row != null)
             {
-                conn.CreateTable<Post>();
-                int rows = conn.Insert(post);
-
-                if (rows > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
+            else
+            {
+                return false;
+            }
+
+            //using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            //{
+            //    conn.CreateTable<Post>();
+            //    int rows = conn.Insert(post);
+
+            //    if (rows > 0)
+            //    {
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        return false;
+            //    }
+            //}
         }
 
         public static Dictionary<string, int> GetCategories(List<Post> posts)

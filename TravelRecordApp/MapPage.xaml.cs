@@ -42,7 +42,7 @@ namespace TravelRecordApp
 
             GetLocation();
 
-            DisplayInMap(Post.Read());
+            DisplayInMap(await Post.Read());
 
         }
         private void DisplayInMap(List<Post> posts)

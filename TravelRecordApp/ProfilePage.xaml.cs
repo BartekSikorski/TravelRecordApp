@@ -18,11 +18,11 @@ namespace TravelRecordApp
             InitializeComponent();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            var postTable = Post.Read();
+            var postTable = await Post.Read();
           
             categoriesListView.ItemsSource = Post.GetCategories(postTable);
 
