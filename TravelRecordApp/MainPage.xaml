@@ -28,7 +28,8 @@
         <Button x:Name="RegisterUserButton"
                 Text="Register"
                 HorizontalOptions="End"
-                Clicked="RegisterUserButton_Clicked" />
+                Command="{Binding RegistrationCommand}"
+                 />
     </StackLayout>
 
 </ContentPage>

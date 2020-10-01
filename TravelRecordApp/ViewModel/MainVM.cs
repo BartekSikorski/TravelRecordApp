@@ -22,6 +22,7 @@ namespace TravelRecordApp.ViewModel
         }
 
         public LoginCommand LoginCommand { get; set; }
+        public RegisterNavigationCommand RegistrationCommand { get; set; }
 
         private string email;
 
@@ -71,6 +72,7 @@ namespace TravelRecordApp.ViewModel
         {
             User = new User();
             LoginCommand = new LoginCommand(this);
+            RegistrationCommand = new RegisterNavigationCommand(this);
         }
 
         public async void Login()
@@ -86,5 +88,9 @@ namespace TravelRecordApp.ViewModel
             }
         }
 
+        public async void Navigate()
+        {
+            await App.Current.MainPage.Navigation.PushAsync(new RegistrPage());
+        }
     }
 }
