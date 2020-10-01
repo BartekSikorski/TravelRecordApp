@@ -7,6 +7,7 @@
                  Margin="20">
 
             <Entry x:Name="emailEntry" 
+                   Text="{Binding Email,Mode=TwoWay}"
                    Placeholder="Email address"
                    Keyboard="Email"
                    TextColor="{StaticResource blue}"
@@ -14,16 +15,18 @@
             <Entry x:Name="passwordEntry" 
                    Placeholder="Password"
                IsPassword="True"
-               Text="Password"
+               Text="{Binding Password, Mode=TwoWay}"
                TextColor="{StaticResource blue}"/>
             <Entry x:Name="confirmPasswordEntry" 
                    Placeholder="Confirm Password"
+                   Text="{Binding ConfirmPassword, Mode=TwoWay}"
                IsPassword="True"
                TextColor="{StaticResource blue}"/>
             <Button x:Name="RegisterButton" Text="Register"
                 Margin="0,50,0,0"
-               Clicked="RegisterButton_Clicked"
-                Style="{StaticResource normalButton}"
+                    Command="{Binding RegisterCommand}"
+                    CommandParameter="{Binding User}"
+                    Style="{StaticResource normalButton}"
                 />
         </StackLayout>
     </ContentPage.Content>

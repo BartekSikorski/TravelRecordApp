@@ -46,6 +46,19 @@ namespace TravelRecordApp.Model
             }
         }
 
+        private string confirmPassword;
+
+        public string ConfirmPassword
+        {
+            get { return confirmPassword; }
+            set
+            {
+                confirmPassword = value;
+                OnPropertyChanged("ConfirmPassword");
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public static async Task<bool> Login(string userName, string password)
@@ -67,7 +80,7 @@ namespace TravelRecordApp.Model
 
                 if (user != null)
                 {
-                
+
                     if (user.Password == password)
                     {
                         App.user = user;

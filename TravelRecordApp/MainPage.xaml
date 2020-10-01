@@ -28,7 +28,7 @@
         <Button x:Name="RegisterUserButton"
                 Text="Register"
                 HorizontalOptions="End"
-                Command="{Binding RegistrationCommand}"
+                Command="{Binding RegisterNavigationCommand}"
                  />
     </StackLayout>
 

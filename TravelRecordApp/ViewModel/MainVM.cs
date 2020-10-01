@@ -22,7 +22,7 @@ namespace TravelRecordApp.ViewModel
         }
 
         public LoginCommand LoginCommand { get; set; }
-        public RegisterNavigationCommand RegistrationCommand { get; set; }
+        public RegisterNavigationCommand RegisterNavigationCommand { get; set; }
 
         private string email;
 
@@ -72,7 +72,7 @@ namespace TravelRecordApp.ViewModel
         {
             User = new User();
             LoginCommand = new LoginCommand(this);
-            RegistrationCommand = new RegisterNavigationCommand(this);
+            RegisterNavigationCommand = new RegisterNavigationCommand(this);
         }
 
         public async void Login()
