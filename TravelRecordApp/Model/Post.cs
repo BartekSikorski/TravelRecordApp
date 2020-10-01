@@ -107,6 +107,19 @@ namespace TravelRecordApp.Model
             }
         }
 
+        private DateTimeOffset dateTimeOffset;
+
+        public DateTimeOffset CreatedAt
+        {
+            get { return dateTimeOffset; }
+            set
+            {
+                dateTimeOffset = value;
+                OnPropertyChanged("CreatedAt");
+
+            }
+        }
+
         public int UserId { get; set; }
 
         public Guid UserGuid { get; set; }
@@ -138,7 +151,7 @@ namespace TravelRecordApp.Model
                     Address = venue.location.address;
                     Distances = venue.location.distance;
                 }
-               
+
 
                 OnPropertyChanged("Venue");
             }
@@ -162,7 +175,8 @@ namespace TravelRecordApp.Model
                     Address = x.Object.Address,
                     Distances = x.Object.Distances,
                     VenueName = x.Object.VenueName,
-                    UserGuid = x.Object.UserGuid
+                    UserGuid = x.Object.UserGuid,
+                    CreatedAt = x.Object.CreatedAt
 
                 }).ToList();
 

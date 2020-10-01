@@ -81,6 +81,7 @@ namespace TravelRecordApp.ViewModel
             try
             {
                 post.UserGuid = App.user.Guid;
+                post.CreatedAt = DateTimeOffset.Now;
                 var isInserted = await Post.Insert(post);
                 if (isInserted)
                 {
