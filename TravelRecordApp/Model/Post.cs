@@ -10,6 +10,8 @@ namespace TravelRecordApp.Model
 {
     public class Post : INotifyPropertyChanged
     {
+        public Guid Guid { get; set; } = Guid.NewGuid();
+
         private string id;
 
         public string Id
@@ -176,7 +178,8 @@ namespace TravelRecordApp.Model
                     Distances = x.Object.Distances,
                     VenueName = x.Object.VenueName,
                     UserGuid = x.Object.UserGuid,
-                    CreatedAt = x.Object.CreatedAt
+                    CreatedAt = x.Object.CreatedAt,
+                    Guid = x.Object.Guid
 
                 }).ToList();
 
