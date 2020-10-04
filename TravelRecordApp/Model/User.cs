@@ -1,19 +1,21 @@
-﻿using System;
+﻿using Firebase.Auth;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TravelRecordApp.Helpers;
 
 namespace TravelRecordApp.Model
 {
     public class User : INotifyPropertyChanged
     {
         public Guid Guid { get; set; } = Guid.NewGuid();
-        private int id;
+        private string id;
 
-        public int Id
+        public string Id
         {
             get { return id; }
             set
@@ -61,42 +63,51 @@ namespace TravelRecordApp.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static async Task<bool> Login(string userName, string password)
+        public static async Task<string> Login(string userName, string password)
         {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+            try
             {
-                return false;
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyBawVnNH00j5nmTKZxEadDKUGXkI7qde3o"));
+                var token = await authProvider.SignInWithEmailAndPasswordAsync(userName, password);
+                App.user = new User { Id = token.User.LocalId };
+                return "OK";
+
             }
-            else
+            catch (Exception ex)
             {
-                var users = (await App.firebase.Child("Users").OnceAsync<User>()).Select(x => new User
-                {
-                    Email = x.Object.Email,
-                    Password = x.Object.Password,
-                    Guid = x.Object.Guid
-                }).ToList();
-
-                var user = users.Where(x => x.Email == userName).FirstOrDefault();
-
-                if (user != null)
-                {
-
-                    if (user.Password == password)
-                    {
-                        App.user = user;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-                }
-                else
-                {
-                    return false;
-                }
+                return ex.Message;
+                throw;
             }
+           
+            //if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+            //{
+            //    return false;
+            //}
+            //else
+            //{
+            //    var users = await FirebaseHelper.GetUsers();
+
+            //    var user = users.Where(x => x.Email == userName).FirstOrDefault();
+
+            //    if (user != null)
+            //    {
+
+            //        if (user.Password == password)
+            //        {
+            //            App.user = user;
+            //            return true;
+            //        }
+            //        else
+            //        {
+            //            return false;
+            //        }
+
+            //    }
+            //    else
+            //    {
+            //        return false;
+            //    }
+            //}
         }
 
         private void OnPropertyChanged(string propertyName)

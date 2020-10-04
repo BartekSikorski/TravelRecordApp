@@ -36,7 +36,8 @@ namespace TravelRecordApp.ViewModel
                 {
                     Experience = this.Experience,
                     Venue = this.Venue,
-                    UserGuid = App.user.Guid
+                    UserGuid = App.user.Guid,
+                    UserId = App.user.Id
                 };
                 OnProperyChanged("Venue");
             }
@@ -98,6 +99,7 @@ namespace TravelRecordApp.ViewModel
                 {
                     post.UserGuid = App.user.Guid;
                     post.CreatedAt = DateTimeOffset.Now;
+                    post.UserId = App.user.Id;
                     Busy = true;
                     var isInserted = await Post.Insert(post);
                     if (isInserted)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using TravelRecordApp.Helpers;
 
 namespace TravelRecordApp.Model
 {
@@ -122,7 +123,18 @@ namespace TravelRecordApp.Model
             }
         }
 
-        public int UserId { get; set; }
+        private string userId;
+
+        public string UserId
+        {
+            get { return userId; }
+            set
+            {
+                userId = value;
+                OnPropertyChanged("UserId");
+            }
+        }
+
 
         public Guid UserGuid { get; set; }
 
@@ -164,32 +176,9 @@ namespace TravelRecordApp.Model
 
         public static async Task<List<Post>> Read()
         {
-            var ttt = (await App.firebase.Child("Posts").OnceAsync<Post>());
-
-            var posts = (await App.firebase.Child("Posts").OnceAsync<Post>())
-                .Where(x => x.Object.UserGuid.ToString() == App.user.Guid.ToString())
-                .Select(x => new Post
-                {
-                    Experience = x.Object.Experience,
-                    Latitude = x.Object.Latitude,
-                    Longtitude = x.Object.Longtitude,
-                    Venue = x.Object.Venue,
-                    Address = x.Object.Address,
-                    Distances = x.Object.Distances,
-                    VenueName = x.Object.VenueName,
-                    UserGuid = x.Object.UserGuid,
-                    CreatedAt = x.Object.CreatedAt,
-                    Guid = x.Object.Guid
-
-                }).ToList();
-
+            var posts = await FirebaseHelper.GetPosts(App.user);
             return posts;
-            //using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-            //{
-            //    //conn.CreateTable<Post>();
-            //    List<Post> posts = conn.Table<Post>().ToList();
-            //    return posts;
-            //}
+
         }
 
         public int Distances { get; set; }

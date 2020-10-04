@@ -82,9 +82,9 @@ namespace TravelRecordApp.ViewModel
             {
 
                 var isLogged = await User.Login(User.Email, User.Password);
-                if (!isLogged)
+                if (isLogged != "OK")
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", "Coś poszło nie tak !!", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", isLogged, "OK");
                 }
                 else
                 {

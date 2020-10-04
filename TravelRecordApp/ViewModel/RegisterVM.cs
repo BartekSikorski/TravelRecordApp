@@ -1,4 +1,6 @@
-﻿using Firebase.Database.Query;
+﻿using Acr.UserDialogs;
+using Firebase.Auth;
+using Firebase.Database.Query;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +21,7 @@ namespace TravelRecordApp.ViewModel
             set
             {
                 email = value;
-                User = new User
+                User = new Model.User
                 {
                     Email = this.Email,
                     Password = this.Password,
@@ -37,7 +39,7 @@ namespace TravelRecordApp.ViewModel
             set
             {
                 password = value;
-                User = new User
+                User = new Model.User
                 {
                     Email = this.Email,
                     Password = this.Password,
@@ -55,7 +57,7 @@ namespace TravelRecordApp.ViewModel
             set
             {
                 confirmPassword = value;
-                User = new User
+                User = new Model.User
                 {
                     Email = this.Email,
                     Password = this.Password,
@@ -65,9 +67,9 @@ namespace TravelRecordApp.ViewModel
             }
         }
 
-        private User user;
+        private Model.User user;
 
-        public User User
+        public Model.User User
         {
             get { return user; }
             set
@@ -94,9 +96,23 @@ namespace TravelRecordApp.ViewModel
             }
         }
 
-        public async void Register(User user)
+        public async void Register(Model.User user)
         {
-            var newuser = await App.firebase.Child("Users").PostAsync(user);
+            try
+            {
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyBawVnNH00j5nmTKZxEadDKUGXkI7qde3o"));
+                var token = await authProvider.CreateUserWithEmailAndPasswordAsync(user.Email, user.Password);
+                UserDialogs.Instance.Toast("User added successfuly");
+                await App.Current.MainPage.Navigation.PushAsync(new MainPage());
+            }
+            catch (Exception ex)
+            {
+
+                UserDialogs.Instance.Alert(ex.Message);
+            }
+          
+
+            //var newuser = await App.firebase.Child("Users").PostAsync(user);
         }
     }
 }
