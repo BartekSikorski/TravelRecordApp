@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acr.UserDialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -16,11 +17,14 @@ namespace TravelRecordApp.ViewModel
         }
         public async void UpdatePosts()
         {
-            var posts = await Post.Read();
-            Posts.Clear();
-            foreach (var post in posts)
+            using (UserDialogs.Instance.Loading("Waiting for history update..."))
             {
-                Posts.Add(post);
+                var posts = await Post.Read();
+                Posts.Clear();
+                foreach (var post in posts)
+                {
+                    Posts.Add(post);
+                }
             }
         }
     }

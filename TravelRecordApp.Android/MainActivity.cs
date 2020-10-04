@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using System.IO;
 using Plugin.Permissions;
+using Acr.UserDialogs;
 
 namespace TravelRecordApp.Droid
 {
@@ -18,12 +19,12 @@ namespace TravelRecordApp.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.FormsMaps.Init(this, savedInstanceState);
+            UserDialogs.Init(this);
 
             string dbNama = "travelDb.sqlite";
             string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);

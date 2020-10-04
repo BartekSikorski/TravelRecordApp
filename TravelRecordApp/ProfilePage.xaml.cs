@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Acr.UserDialogs;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,14 @@ namespace TravelRecordApp
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            using (UserDialogs.Instance.Loading("Waiting for profile info..."))
+            {
+                var postTable = await Post.Read();
 
-            var postTable = await Post.Read();
-          
-            categoriesListView.ItemsSource = Post.GetCategories(postTable);
+                categoriesListView.ItemsSource = Post.GetCategories(postTable);
 
-            postCountLabel.Text = postTable.Count().ToString();
+                postCountLabel.Text = postTable.Count().ToString();
+            }
 
 
         }

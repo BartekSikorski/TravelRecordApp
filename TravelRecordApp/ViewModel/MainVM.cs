@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acr.UserDialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -77,14 +78,18 @@ namespace TravelRecordApp.ViewModel
 
         public async void Login()
         {
-            var isLogged = await User.Login(User.Email, User.Password); // todo - do pobrania z User.Email i User.Password
-            if (!isLogged)
+            using (UserDialogs.Instance.Loading("Waiting for login...") )
             {
-                await App.Current.MainPage.DisplayAlert("Error", "Coś poszło nie tak !!", "OK");
-            }
-            else
-            {
-                await App.Current.MainPage.Navigation.PushAsync(new HomePage());
+
+                var isLogged = await User.Login(User.Email, User.Password);
+                if (!isLogged)
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Coś poszło nie tak !!", "OK");
+                }
+                else
+                {
+                    await App.Current.MainPage.Navigation.PushAsync(new HomePage());
+                }
             }
         }
 

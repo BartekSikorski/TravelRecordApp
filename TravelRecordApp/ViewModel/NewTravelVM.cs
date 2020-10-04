@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acr.UserDialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -12,6 +13,18 @@ namespace TravelRecordApp.ViewModel
         public SaveCommand SaveCommand { get; set; }
 
         private Venue venue;
+
+        private bool busy;
+
+        public bool Busy
+        {
+            get { return busy; }
+            set
+            {
+                busy = value;
+                OnProperyChanged("Busy");
+            }
+        }
 
         public Venue Venue
         {
@@ -64,6 +77,7 @@ namespace TravelRecordApp.ViewModel
             SaveCommand = new SaveCommand(this);
             Venue = new Venue();
             Post = new Post();
+            Busy = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -78,32 +92,39 @@ namespace TravelRecordApp.ViewModel
 
         public async void Save(Post post)
         {
-            try
+            using (UserDialogs.Instance.Loading("Waiting..."))
             {
-                post.UserGuid = App.user.Guid;
-                post.CreatedAt = DateTimeOffset.Now;
-                var isInserted = await Post.Insert(post);
-                if (isInserted)
+                try
                 {
-                    await App.Current.MainPage.DisplayAlert("Success", "Experience added successfuly", "OK");
+                    post.UserGuid = App.user.Guid;
+                    post.CreatedAt = DateTimeOffset.Now;
+                    Busy = true;
+                    var isInserted = await Post.Insert(post);
+                    if (isInserted)
+                    {
+                        Busy = false;
+                        await App.Current.MainPage.DisplayAlert("Success", "Experience added successfuly", "OK");
+                    }
+                    else
+                    {
+                        Busy = false;
+
+                        await App.Current.MainPage.DisplayAlert("Failure", "Experience not added successfuly", "OK");
+                    }
                 }
-                else
+                catch (NullReferenceException nre)
                 {
-                    await App.Current.MainPage.DisplayAlert("Failure", "Experience not added successfuly", "OK");
+                    await App.Current.MainPage.DisplayAlert("Failure", nre.Message, "OK");
+                    throw;
+
                 }
-            }
-            catch (NullReferenceException nre)
-            {
-                await App.Current.MainPage.DisplayAlert("Failure", nre.Message, "OK");
-                throw;
-
-            }
-            catch (Exception ex)
-            {
-
-                await App.Current.MainPage.DisplayAlert("Failure", ex.Message, "OK");
-                throw;
-            }
+                catch (Exception ex)
+                {
+                    Busy = false;
+                    await App.Current.MainPage.DisplayAlert("Failure", ex.Message, "OK");
+                    throw;
+                }
+            }     
         }
     }
 }
