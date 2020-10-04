@@ -1,7 +1,9 @@
 ﻿using Acr.UserDialogs;
+using Firebase.Database.Query;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using TravelRecordApp.Model;
 
@@ -26,6 +28,18 @@ namespace TravelRecordApp.ViewModel
                     Posts.Add(post);
                 }
             }
+        }
+
+        public async void DeletePost(Post post)
+        {
+            var toDeletePost = (await App.firebase
+               .Child("Posts")
+               .OnceAsync<Post>()).FirstOrDefault(a => a.Object.Guid == post.Guid);
+
+            await App.firebase
+                .Child("Posts")
+                .Child(toDeletePost.Key)
+                .DeleteAsync();
         }
     }
 }

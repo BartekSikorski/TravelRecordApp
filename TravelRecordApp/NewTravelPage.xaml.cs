@@ -1,8 +1,11 @@
 ﻿using Plugin.Geolocator;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Linq;
 using TravelRecordApp.Model;
 using TravelRecordApp.ViewModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,13 +25,46 @@ namespace TravelRecordApp
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            try
+            {
+                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Location);
 
-            var locator = CrossGeolocator.Current;
-            var position = await locator.GetPositionAsync();
+                if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+                {
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions.Abstractions.Permission.Location))
+                    {
+                        await DisplayAlert("Need permision", "Niedd", "OK");
+                    }
 
-            var venues = await Venue.GetVenues(position.Latitude, position.Longitude);
-            venueListView.ItemsSource = venues;
+                   var result = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
 
+                    if (result.ContainsKey(Permission.Location))
+                    {
+                        status = result[Permission.Location];
+                    }
+                }
+
+                if (status == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+                {
+
+
+                    var locator = CrossGeolocator.Current;
+                    var position = await locator.GetPositionAsync();
+
+                    var venues = await Venue.GetVenues(position.Latitude, position.Longitude);
+                    venueListView.ItemsSource = venues;
+                }
+                else
+                {
+                    await DisplayAlert("Need perms", "For location", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("ERROR", ex.Message, "OK");
+                throw;
+            }
+           
         }
     }
 }
